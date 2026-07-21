@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guilt Triage Journal — Say No Without Guilt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Lora:ital,wght@0,400;0,500;1,400&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream:   #FAF5EE;
+  --cream2:  #F3EBE0;
+  --cream3:  #DDD0C0;
+  --plum:    #5C1E2C;
+  --plum-lt: #7A3042;
+  --rose:    #C26B82;
+  --rose-lt: #DDA0B0;
+  --sage:    #6B7A63;
+  --gold:    #B8924A;
+  --gold-lt: #D4B078;
+  --ink:     #2C1810;
+}
+
+/* ═══════════════════════════════════════
+   SCREEN CHROME
+═══════════════════════════════════════ */
+@media screen {
+  body {
+    background: #E8E0D5;
+    font-family: 'Lora', Georgia, serif;
+    padding: 0 20px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* ── Toolbar ── */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    max-width: 230mm;
+    background: var(--plum);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    gap: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+
+  .toolbar-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--cream);
+    letter-spacing: 0.5px;
+  }
+
+  .toolbar-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .mode-label {
+    font-family: 'Lora', serif;
+    font-size: 10px;
+    color: rgba(250,245,238,0.6);
+    letter-spacing: 1px;
+  }
+
+  .mode-toggle {
+    display: flex;
+    border: 1px solid var(--gold);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .mode-btn {
+    padding: 5px 12px;
+    font-family: 'Lora', serif;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    background: transparent;
+    color: rgba(250,245,238,0.6);
+  }
+  .mode-btn.active {
+    background: var(--gold);
+    color: var(--plum);
+    font-weight: 500;
+  }
+
+  .print-btn {
+    padding: 5px 16px;
+    background: var(--rose);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-family: 'Lora', serif;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+  }
+  .print-btn:hover { background: #a85870; }
+
+  .pages-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 24px;
+    align-items: center;
+  }
+}
+
+/* ═══════════════════════════════════════
+   PRINT
+═══════════════════════════════════════ */
+@media print {
+  @page { size: A4 portrait; margin: 0; }
+  body { background: none; padding: 0; margin: 0; }
+  .toolbar { display: none !important; }
+  .pages-wrap { margin: 0; gap: 0; }
+  .page {
+    box-shadow: none !important;
+    page-break-after: always;
+  }
+  .page:last-of-type { page-break-after: avoid; }
+  .cover { page-break-after: always; box-shadow: none !important; }
+
+  /* Digital mode: show textareas, hide blank lines */
+  body.mode-digital .write-lines { display: none !important; }
+  body.mode-digital .source-opt input[type=checkbox] { display: inline-block; }
+  body.mode-digital textarea {
+    display: block !important;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    resize: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Blank mode: hide textareas, show blank lines */
+  body.mode-blank textarea { display: none !important; }
+  body.mode-blank .write-lines { display: flex !important; }
+  body.mode-blank .source-opt input[type=checkbox] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 9px;
+    height: 9px;
+    border: 0.8px solid var(--plum);
+    border-radius: 1px;
+    background: transparent;
+  }
+}
+
+/* ═══════════════════════════════════════
+   COVER
+═══════════════════════════════════════ */
+.cover {
+  width: 210mm;
+  height: 297mm;
+  background: var(--plum);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.cover-border { position: absolute; inset: 12mm; border: 0.8px solid rgba(184,146,74,0.4); }
+.cover-border-inner { position: absolute; inset: 15mm; border: 0.3px solid rgba(184,146,74,0.2); }
+.cover-ornament { font-size: 18px; color: var(--gold-lt); letter-spacing: 12px; margin-bottom: 10mm; }
+.cover-series {
+  font-family: 'Lora', serif; font-size: 9px; font-style: italic;
+  letter-spacing: 3px; text-transform: uppercase; color: rgba(250,245,238,0.5); margin-bottom: 8mm;
+}
+.cover-title {
+  font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 300;
+  color: var(--cream); text-align: center; line-height: 1.05; letter-spacing: 1px;
+}
+.cover-title em { display: block; font-style: italic; color: var(--gold-lt); font-size: 44px; }
+.cover-rule { width: 40mm; height: 0.8px; background: var(--gold); margin: 8mm auto; }
+.cover-subtitle {
+  font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic;
+  color: rgba(250,245,238,0.75); text-align: center; line-height: 1.6; padding: 0 24mm;
+}
+.cover-instruction {
+  margin-top: 12mm; font-family: 'Lora', serif; font-size: 9px; font-style: italic;
+  color: rgba(250,245,238,0.45); letter-spacing: 1.5px; text-align: center; line-height: 1.7;
+}
+.cover-footer {
+  position: absolute; bottom: 18mm;
+  font-family: 'Lora', serif; font-size: 8px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--gold);
+}
+
+/* ═══════════════════════════════════════
+   JOURNAL PAGE
+═══════════════════════════════════════ */
+.page {
+  width: 210mm;
+  height: 297mm;
+  background: var(--cream);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Accent bar */
+.accent-bar {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 8mm;
+  background: var(--plum);
+}
+.accent-dots {
+  position: absolute; left: 2mm; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 4mm;
+}
+.accent-dots span { display: block; width: 4px; height: 4px; border-radius: 50%; background: var(--gold); }
+
+/* Content */
+.content {
+  margin-left: 8mm;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 8mm 11mm 7mm 9mm;
+}
+
+/* Page header */
+.page-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding-bottom: 4mm; border-bottom: 1px solid var(--gold); margin-bottom: 4mm;
+}
+.header-left .series {
+  font-family: 'Lora', serif; font-size: 7.5px; font-style: italic;
+  color: var(--sage); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 2mm;
+}
+.header-left .title {
+  font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300;
+  color: var(--plum); line-height: 1.1;
+}
+.header-left .title em { font-style: italic; color: var(--rose); }
+.header-left .subtitle {
+  font-family: 'Lora', serif; font-style: italic; font-size: 9.5px;
+  color: var(--sage); margin-top: 1.5mm; line-height: 1.5;
+}
+.header-right { text-align: right; min-width: 38mm; }
+.meta-field { display: flex; flex-direction: column; align-items: flex-end; gap: 1mm; margin-bottom: 3mm; }
+.meta-line { width: 36mm; height: 0.5px; background: var(--plum); }
+.meta-lbl { font-family: 'Lora', serif; font-size: 7px; color: var(--sage); letter-spacing: 1.5px; text-transform: uppercase; }
+
+/* — date/time inputs (digital mode) — */
+.meta-input {
+  font-family: 'Lora', serif; font-size: 9px; color: var(--ink);
+  border: none; border-bottom: 0.5px solid var(--plum);
+  background: transparent; width: 36mm; text-align: right; outline: none;
+}
+@media print {
+  body.mode-digital .meta-input { border: none; }
+  body.mode-blank .meta-input { display: none; }
+}
+
+/* Context strip */
+.context-strip {
+  background: var(--cream2); border-left: 3px solid var(--rose);
+  padding: 2.5mm 5mm; margin-bottom: 4mm; border-radius: 0 3px 3px 0;
+}
+.context-label {
+  font-family: 'Lora', serif; font-size: 7px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--rose); margin-bottom: 1mm;
+}
+.context-strip p {
+  font-family: 'Lora', serif; font-size: 8.5px; font-style: italic;
+  color: var(--ink); line-height: 1.55;
+}
+
+/* Questions */
+.questions { display: flex; flex-direction: column; gap: 3mm; flex: 1; }
+
+.q-block { display: flex; flex-direction: column; gap: 1.5mm; }
+
+.q-header { display: flex; align-items: baseline; gap: 2.5mm; }
+
+.q-num {
+  font-family: 'Caveat', cursive; font-size: 20px;
+  color: var(--plum); line-height: 1; min-width: 6mm;
+}
+
+.q-title-block { flex: 1; }
+
+.q-title {
+  font-family: 'Cormorant Garamond', serif; font-size: 13px; font-weight: 600;
+  color: var(--plum); letter-spacing: 0.3px; line-height: 1.2;
+}
+.q-prompt {
+  font-family: 'Lora', serif; font-size: 8px; font-style: italic;
+  color: var(--sage); line-height: 1.5; margin-top: 0.5mm;
+}
+
+/* Source checkboxes */
+.source-options {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.5mm 5mm; margin: 1.5mm 0 1.5mm 9mm;
+}
+.source-opt {
+  display: flex; align-items: center; gap: 2mm;
+  font-family: 'Lora', serif; font-size: 8px; color: var(--ink); line-height: 1.4;
+}
+.source-opt input[type=checkbox] {
+  width: 10px; height: 10px;
+  accent-color: var(--plum); cursor: pointer; flex-shrink: 0;
+}
+.source-opt em { font-size: 7.5px; color: var(--sage); }
+
+/* Textarea (digital fill mode) */
+textarea.fill-area {
+  margin-left: 9mm;
+  width: calc(100% - 9mm);
+  font-family: 'Lora', Georgia, serif;
+  font-size: 9px;
+  color: var(--ink);
+  background: rgba(242,232,220,0.35);
+  border: 0.5px solid var(--cream3);
+  border-radius: 2px;
+  padding: 3mm 4mm;
+  resize: none;
+  outline: none;
+  line-height: 1.7;
+}
+textarea.fill-area:focus { border-color: var(--rose-lt); background: rgba(242,232,220,0.6); }
+
+/* Blank lines (pen fill mode) */
+.write-lines {
+  margin-left: 9mm;
+  display: flex; flex-direction: column; gap: 5mm;
+}
+.wl {
+  width: 100%; height: 0;
+  border-bottom: 0.5px solid var(--cream3);
+  position: relative;
+}
+.wl::before {
+  content: ''; position: absolute; left: -3mm; top: -1px;
+  width: 2px; height: 2px; border-radius: 50%; background: var(--rose-lt);
+}
+
+/* Divider */
+.q-divider { width: 100%; height: 0.5px; background: linear-gradient(to right, var(--gold-lt), transparent); }
+
+/* Page footer */
+.page-footer {
+  border-top: 0.5px solid var(--gold); padding-top: 2.5mm;
+  display: flex; justify-content: space-between; align-items: center; margin-top: 2.5mm;
+}
+.footer-note {
+  font-family: 'Lora', serif; font-size: 7.5px; font-style: italic;
+  color: var(--rose); line-height: 1.5;
+}
+.footer-brand {
+  font-family: 'Lora', serif; font-size: 7px; color: var(--sage);
+  letter-spacing: 1.5px; text-align: right; line-height: 1.5;
+}
+
+/* Screen: show/hide based on mode */
+@media screen {
+  body.mode-digital .write-lines { display: none; }
+  body.mode-digital textarea.fill-area { display: block; }
+  body.mode-blank .write-lines { display: flex; }
+  body.mode-blank textarea.fill-area { display: none; }
+}
+</style>
+</head>
+<body class="mode-digital">
+
+<!-- ── TOOLBAR ── -->
+<div class="toolbar">
+  <div class="toolbar-title">Guilt Triage Journal</div>
+  <div class="toolbar-actions">
+    <span class="mode-label">Mode:</span>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="btn-digital" onclick="setMode('digital')">✏️ Fill &amp; Print</button>
+      <button class="mode-btn" id="btn-blank" onclick="setMode('blank')">🖨 Print Blank</button>
+    </div>
+    <button class="print-btn" onclick="window.print()">Print →</button>
+  </div>
+</div>
+
+<div class="pages-wrap">
+
+<!-- ══════ COVER ══════ -->
+<div class="cover">
+  <div class="cover-border"></div>
+  <div class="cover-border-inner"></div>
+  <div class="cover-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+  <div class="cover-series">Say No Without Guilt · Practice #10</div>
+  <div class="cover-title">Guilt<br><em>Triage</em><br>Journal</div>
+  <div class="cover-rule"></div>
+  <div class="cover-subtitle">
+    A five-question process for hearing guilt<br>without obeying it.
+  </div>
+  <div class="cover-instruction">
+    Use when guilt arises and is asking you to act on it.<br>
+    10 minutes. One entry at a time.
+  </div>
+  <div class="cover-footer">Kinetic Mind 101</div>
+</div>
+
+<!-- ══════ JOURNAL PAGE 1 ══════ -->
+<div class="page">
+  <div class="accent-bar">
+    <div class="accent-dots">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="content">
+
+    <div class="page-header">
+      <div class="header-left">
+        <div class="series">Guilt Triage Journal · Say No Without Guilt</div>
+        <div class="title">The Five <em>Questions</em></div>
+        <div class="subtitle">Hear it. Understand it. Decide — don't obey.</div>
+      </div>
+      <div class="header-right">
+        <div class="meta-field">
+          <input class="meta-input" type="text" placeholder="Date">
+          <div class="meta-line"></div>
+          <div class="meta-lbl">Date</div>
+        </div>
+        <div class="meta-field">
+          <input class="meta-input" type="text" placeholder="Time">
+          <div class="meta-line"></div>
+          <div class="meta-lbl">Time</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="context-strip">
+      <div class="context-label">Before you begin</div>
+      <p>Take one slow breath. You don't have to fix this feeling — only understand it. Answer honestly, not perfectly.</p>
+    </div>
+
+    <div class="questions">
+
+      <div class="q-block">
+        <div class="q-header">
+          <div class="q-num">1</div>
+          <div class="q-title-block">
+            <div class="q-title">The Guilt</div>
+            <div class="q-prompt">What am I feeling guilty about? Describe the situation specifically.</div>
+          </div>
+        </div>
+        <textarea class="fill-area" rows="3" placeholder="Write here…"></textarea>
+        <div class="write-lines"><div class="wl"></div><div class="wl"></div><div class="wl"></div></div>
+      </div>
+
+      <div class="q-divider"></div>
+
+      <div class="q-block">
+        <div class="q-header">
+          <div class="q-num">2</div>
+          <div class="q-title-block">
+            <div class="q-title">The Source</div>
+            <div class="q-prompt">Where does this guilt come from? Check what fits.</div>
+          </div>
+        </div>
+        <div class="source-options">
+          <label class="source-opt"><input type="checkbox"> A value I actually hold <em>&nbsp;(healthy guilt)</em></label>
+          <label class="source-opt"><input type="checkbox"> Fear of someone's reaction <em>&nbsp;(protective)</em></label>
+          <label class="source-opt"><input type="checkbox"> An inherited message <em>&nbsp;("good girls don't…")</em></label>
+          <label class="source-opt"><input type="checkbox"> A pattern from the past <em>&nbsp;(old programming)</em></label>
+        </div>
+        <textarea class="fill-area" rows="2" placeholder="Add more detail…"></textarea>
+        <div class="write-lines"><div class="wl"></div><div class="wl"></div></div>
+      </div>
+
+      <div class="q-divider"></div>
+
+      <div class="q-block">
+        <div class="q-header">
+          <div class="q-num">3</div>
+          <div class="q-title-block">
+            <div class="q-title">The Truth</div>
+            <div class="q-prompt">Not what guilt says — what is the most accurate, fair assessment? Have I actually done something wrong?</div>
+          </div>
+        </div>
+        <textarea class="fill-area" rows="3" placeholder="Write here…"></textarea>
+        <div class="write-lines"><div class="wl"></div><div class="wl"></div><div class="wl"></div></div>
+      </div>
+
+      <div class="q-divider"></div>
+
+      <div class="q-block">
+        <div class="q-header">
+          <div class="q-num">4</div>
+          <div class="q-title-block">
+            <div class="q-title">The Feeling</div>
+            <div class="q-prompt">Can I feel this guilt and still be okay? Can I hold it without acting on it?</div>
+          </div>
+        </div>
+        <textarea class="fill-area" rows="2" placeholder="Write here…"></textarea>
+        <div class="write-lines"><div class="wl"></div><div class="wl"></div></div>
+      </div>
+
+      <div class="q-divider"></div>
+
+      <div class="q-block">
+        <div class="q-header">
+          <div class="q-num">5</div>
+          <div class="q-title-block">
+            <div class="q-title">The Decision</div>
+            <div class="q-prompt">Knowing the source, knowing the truth, feeling the feeling — what do I actually want to do?</div>
+          </div>
+        </div>
+        <textarea class="fill-area" rows="3" placeholder="Write here…"></textarea>
+        <div class="write-lines"><div class="wl"></div><div class="wl"></div><div class="wl"></div></div>
+      </div>
+
+    </div>
+
+    <div class="page-footer">
+      <div class="footer-note">Guilt is information, not instruction.<br>You heard it. Now you decide.</div>
+      <div class="footer-brand">Say No Without Guilt · Marcus Webb<br>kineticmind101.com/tools</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ JOURNAL PAGE 2 ══════ -->
+<div class="page">
+  <div class="accent-bar">
+    <div class="accent-dots">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="content">
+    <div class="page-header">
+      <div class="header-left">
+        <div class="series">Guilt Triage Journal · Say No Without Guilt</div>
+        <div class="title">The Five <em>Questions</em></div>
+        <div class="subtitle">Hear it. Understand it. Decide — don't obey.</div>
+      </div>
+      <div class="header-right">
+        <div class="meta-field">
+          <input class="meta-input" type="text" placeholder="Date">
+          <div class="meta-line"></div>
+          <div class="meta-lbl">Date</div>
+        </div>
+        <div class="meta-field">
+          <input class="meta-input" type="text" placeholder="Time">
+          <div class="meta-line"></div>
+          <div class="meta-lbl">Time</div>
+        </div>
+      </div>
+    </div>
+    <div class="context-strip">
+      <div class="context-label">Before you begin</div>
+      <p>Take one slow breath. You don't have to fix this feeling — only understand it. Answer honestly, not perfectly.</p>
+    </div>
+    <div class="questions">
+      <div class="q-block">
+        <div class="q-header"><div class="q-num">1</div><div class="q-title-block"><div class="q-title">The Guilt</div><div class="q-prompt">What am I feeling guilty about? Describe the situation specifically.</div></div></div>
+        <textarea class="fill-area" rows="3" placeholder="Write here…"></textarea>
+        <div class="write-lines"><div class="wl"></div><div class="wl"></div><div class="wl"></div></div>
+      </div>
+      <div class="q-divider"></div>
+      <div class="q-block">
+        <div class="q-header"><div class="q-num">2</div><div class="q-title-block"><div class="q-title">The Source</div><div class="q-prompt">Where does this guilt come from? Check what fits.</div></div></div>
+        <div class="source-options">
+          <label class="source-opt"><input type="checkbox"> A value I actually hold <em>&nbsp;(healthy guilt)</em></label>
+          <label class="source-opt"><input type="checkbox"> Fear of someone's reaction <em>&nbsp;(protective)</em></label>
+          <label class="source-opt"><input type="checkbox"> An inherited message <em>&nbsp;("good girls don't…")</em></label>
+          <label class="source-opt"><input type="checkbox"> A pattern from the past <em>&nbsp;(old programming)</em></label>
+        </div>
+        <textarea class="fill-area" rows="2" placeholder="Add more detail…"></textarea>
+        <div class="write-lines"><div class="wl"></div><div class="wl"></div></div>
+      </div>
+      <div class="q-divider"></div>
+      <div class="q-block">
+        <div class="q-header"><div class="q-num">3</div><div class="q-title-block"><div class="q-title">The Truth</div><div class="q-prompt">Not what guilt says — what is the most accurate, fair assessment?</div></div></div>
+        <textarea class="fill-area" rows="3" placeholder="Write here…"></textarea>
+        <div class="write-lines"><div class="wl"></div><div class="wl"></div><div class="wl"></div></div>
+      </div>
+      <div class="q-divider"></div>
+      <div class="q-block">
+        <div class="q-header"><div class="q-num">4</div><div class="q-title-block"><div class="q-title">The Feeling</div><div class="q-prompt">Can I feel this guilt and still be okay?</div></div></div>
+        <textarea class="fill-area" rows="2" placeholder="Write here…"></textarea>
+        <div class="write-lines"><div class="wl"></div><div class="wl"></div></div>
+      </div>
+      <div class="q-divider"></div>
+      <div class="q-block">
+        <div class="q-header"><div class="q-num">5</div><div class="q-title-block"><div class="q-title">The Decision</div><div class="q-prompt">Knowing the source, knowing the truth, feeling the feeling — what do I actually want to do?</div></div></div>
+        <textarea class="fill-area" rows="3" placeholder="Write here…"></textarea>
+        <div class="write-lines"><div class="wl"></div><div class="wl"></div><div class="wl"></div></div>
+      </div>
+    </div>
+    <div class="page-footer">
+      <div class="footer-note">Guilt is information, not instruction.<br>You heard it. Now you decide.</div>
+      <div class="footer-brand">Say No Without Guilt · Marcus Webb<br>kineticmind101.com/tools</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /pages-wrap -->
+
+<script>
+function setMode(mode) {
+  document.body.className = 'mode-' + mode;
+  document.getElementById('btn-digital').classList.toggle('active', mode === 'digital');
+  document.getElementById('btn-blank').classList.toggle('active', mode === 'blank');
+}
+</script>
+</body>
+</html>
