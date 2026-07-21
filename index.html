@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kinetic Mind 101 — Books That Move You Forward</title>
+  <meta name="description" content="Independent publisher of practical psychology books. By Marcus Webb." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink:       #0f0e0d;
+      --ink2:      #1c1917;
+      --ink3:      #2d2926;
+      --gold:      #c9a84c;
+      --gold-dim:  #a8874a;
+      --cream:     #f5f0e8;
+      --cream2:    #ede6d8;
+      --sage:      #5A7A52;
+      --plum:      #7E4460;
+      --rosefog:   #EDE0E6;
+      --roseline:  #C9A8BB;
+      --gray:      #9a9188;
+      --gray-dim:  #6b635c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+    }
+
+    /* ══════════════════════════════════════════════
+       NAV
+    ══════════════════════════════════════════════ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--ink);
+      padding: 0 48px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+    }
+    .nav-logo {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-mark {
+      font-family: 'Lora', serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--cream);
+      letter-spacing: -0.01em;
+    }
+    .nav-logo-mark span { color: var(--gold); }
+    .nav-logo-sub {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ══════════════════════════════════════════════
+       HERO
+    ══════════════════════════════════════════════ */
+    .hero {
+      background: var(--ink);
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* subtle grid texture */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 720px; }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+    }
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--gold-dim);
+      opacity: 0.6;
+    }
+
+    .hero h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 700;
+      color: var(--cream);
+      line-height: 1.18;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+    .hero h1 em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--gold);
+    }
+
+    .hero-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .hero-divider::before,
+    .hero-divider::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 1px;
+      background: rgba(201,168,76,0.35);
+    }
+    .hero-divider-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0.7;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: rgba(245,240,232,0.62);
+      line-height: 1.85;
+      max-width: 480px;
+      margin: 0 auto 36px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold);
+      color: var(--ink);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 4px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .hero-cta:hover {
+      background: #dab94f;
+      transform: translateY(-2px);
+    }
+    .hero-cta-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(201,168,76,0.35);
+      color: var(--gold);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 13px 28px;
+      border-radius: 4px;
+      margin-left: 12px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .hero-cta-ghost:hover {
+      border-color: var(--gold);
+      color: #dab94f;
+    }
+
+    /* ══════════════════════════════════════════════
+       STATS BAR
+    ══════════════════════════════════════════════ */
+    .stats-bar {
+      background: var(--ink2);
+      border-top: 1px solid rgba(201,168,76,0.15);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      padding: 20px 48px;
+      display: flex;
+      justify-content: center;
+      gap: 56px;
+      flex-wrap: wrap;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-num {
+      font-family: 'Lora', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray-dim);
+    }
+
+    /* ══════════════════════════════════════════════
+       BOOKSTORE SECTION
+    ══════════════════════════════════════════════ */
+    .store {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 88px 24px;
+    }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 48px;
+      border-bottom: 1px solid var(--cream2);
+      padding-bottom: 20px;
+    }
+    .section-title {
+      font-family: 'Lora', serif;
+      font-size: 1.6rem;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .section-sub {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    /* Book cards — bookstore row layout */
+    .book-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .book-row {
+      display: grid;
+      grid-template-columns: 180px 1fr auto;
+      align-items: start;
+      gap: 32px;
+      padding: 36px 0;
+      border-bottom: 1px solid var(--cream2);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s;
+      border-radius: 8px;
+    }
+    .book-row:hover { background: rgba(201,168,76,0.04); }
+    .book-row:hover .book-row-title { color: var(--plum); }
+
+    /* Book cover — real image */
+    .book-cover {
+      width: 160px;
+      flex-shrink: 0;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 6px 8px 24px rgba(0,0,0,0.22);
+      align-self: start;
+    }
+    .book-cover img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    /* Placeholder cover for books without image yet */
+    .book-cover-placeholder {
+      width: 160px;
+      height: 256px;
+      border-radius: 4px;
+      display: flex;
+      align-items: flex-end;
+      padding: 18px 16px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 6px 8px 24px rgba(0,0,0,0.22);
+      background: linear-gradient(160deg, #2d2926 0%, #1c1917 100%);
+      border: 1px solid rgba(201,168,76,0.2);
+    }
+    .book-cover-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 12px 12px;
+    }
+    .book-cover-label {
+      position: relative;
+      z-index: 1;
+    }
+    .book-cover-label .cl-num {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 4px;
+    }
+    .book-cover-label .cl-title {
+      font-family: 'Lora', serif;
+      font-size: 0.82rem;
+      color: rgba(201,168,76,0.8);
+      line-height: 1.35;
+    }
+
+    /* Synopsis peek */
+    .synopsis {
+      margin-top: 18px;
+      border-left: 2px solid var(--cream2);
+      padding-left: 14px;
+    }
+    .synopsis-toggle {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--gold-dim);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .synopsis-toggle:hover { color: var(--gold); }
+    .synopsis-toggle .arrow { transition: transform 0.2s; display: inline-block; }
+    .synopsis-toggle.open .arrow { transform: rotate(90deg); }
+    .synopsis-body {
+      display: none;
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--gray-dim);
+      line-height: 1.85;
+    }
+    .synopsis-body.visible { display: block; }
+    .synopsis-body p + p { margin-top: 10px; }
+    .synopsis-body .synopsis-source {
+      display: block;
+      font-style: normal;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--gray);
+      margin-top: 12px;
+    }
+
+    /* Book info */
+    .book-info { padding-top: 4px; }
+    .book-row-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .book-num-tag {
+      font-size: 0.63rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .book-status {
+      display: inline-block;
+      font-size: 0.63rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .status-live {
+      background: rgba(90,122,82,0.12);
+      color: var(--sage);
+      border: 1px solid rgba(90,122,82,0.25);
+    }
+    .status-soon {
+      background: rgba(201,168,76,0.1);
+      color: var(--gold-dim);
+      border: 1px solid rgba(201,168,76,0.2);
+    }
+    .book-row-title {
+      font-family: 'Lora', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.25;
+      margin-bottom: 6px;
+      transition: color 0.2s;
+    }
+    .book-row-subtitle {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-bottom: 14px;
+    }
+    .book-row-desc {
+      font-size: 0.88rem;
+      color: var(--gray-dim);
+      line-height: 1.75;
+      max-width: 520px;
+    }
+    .book-row-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      padding: 4px 11px;
+      border-radius: 20px;
+      background: var(--cream2);
+      color: var(--gray-dim);
+    }
+
+    /* Action column */
+    .book-action {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+      padding-top: 4px;
+      min-width: 148px;
+    }
+    .btn-store {
+      display: inline-block;
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 11px 22px;
+      border-radius: 4px;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.15s;
+      width: 100%;
+    }
+    .btn-store-primary {
+      background: var(--plum);
+      color: white;
+    }
+    .btn-store-primary:hover {
+      background: #5c3045;
+      transform: translateY(-1px);
+    }
+    .btn-store-gold {
+      background: var(--gold);
+      color: var(--ink);
+    }
+    .btn-store-gold:hover {
+      background: #dab94f;
+      transform: translateY(-1px);
+    }
+    .btn-store-muted {
+      background: transparent;
+      color: var(--gray);
+      border: 1px solid var(--cream2);
+      cursor: default;
+    }
+    .btn-store-label {
+      font-size: 0.65rem;
+      color: var(--gray);
+      text-align: center;
+    }
+
+    /* ══════════════════════════════════════════════
+       ABOUT / MANIFESTO
+    ══════════════════════════════════════════════ */
+    .manifesto {
+      background: var(--ink);
+      padding: 88px 24px;
+      text-align: center;
+    }
+    .manifesto-inner { max-width: 660px; margin: 0 auto; }
+    .manifesto-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .manifesto h2 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      color: var(--cream);
+      line-height: 1.35;
+      margin-bottom: 20px;
+    }
+    .manifesto h2 em { color: var(--gold); font-style: italic; }
+    .manifesto p {
+      font-size: 0.95rem;
+      color: rgba(245,240,232,0.55);
+      line-height: 1.9;
+    }
+    .manifesto-rule {
+      width: 48px;
+      height: 1px;
+      background: var(--gold-dim);
+      opacity: 0.5;
+      margin: 32px auto;
+    }
+
+    /* ══════════════════════════════════════════════
+       AUTHOR
+    ══════════════════════════════════════════════ */
+    .author {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 88px 24px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .author-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ink2), var(--ink3));
+      border: 2px solid rgba(201,168,76,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .author-avatar-initials {
+      font-family: 'Lora', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold);
+      opacity: 0.7;
+    }
+    .author-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 8px;
+    }
+    .author h3 {
+      font-family: 'Lora', serif;
+      font-size: 1.6rem;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+    .author p {
+      font-size: 0.9rem;
+      color: var(--gray-dim);
+      line-height: 1.8;
+    }
+
+    /* ══════════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════════ */
+    footer {
+      background: var(--ink);
+      border-top: 1px solid rgba(201,168,76,0.12);
+      padding: 40px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-brand {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--cream);
+    }
+    .footer-brand span { color: var(--gold); }
+    .footer-copy {
+      font-size: 0.72rem;
+      color: var(--gray-dim);
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 0.72rem;
+      color: var(--gray-dim);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ══════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .stats-bar { gap: 32px; padding: 20px 24px; }
+      .book-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .book-cover { width: 120px; }
+      .book-cover-placeholder { width: 120px; height: 192px; }
+      .book-action {
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .btn-store { width: auto; }
+      .author { grid-template-columns: 1fr; text-align: center; }
+      .author-avatar { margin: 0 auto; }
+      footer { flex-direction: column; align-items: flex-start; padding: 32px 24px; }
+      .section-header { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a class="nav-logo" href="/">
+      <span class="nav-logo-mark">Kinetic Mind <span>101</span></span>
+      <span class="nav-logo-sub">Publishing</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#books">Books</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Kinetic Mind 101</div>
+      <h1>Books That Move<br>You <em>Forward.</em></h1>
+      <div class="hero-divider">
+        <div class="hero-divider-dot"></div>
+        <div class="hero-divider-dot"></div>
+        <div class="hero-divider-dot"></div>
+      </div>
+      <p class="hero-desc">Practical psychology — no jargon, no fluff. Guides for people ready to understand themselves and act differently.</p>
+      <div>
+        <a class="hero-cta" href="#books">Browse the Books</a>
+        <a class="hero-cta-ghost" href="say-no/">Book 01 Companion Bundle</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS BAR ── -->
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-num">2</div>
+      <div class="stat-label">Titles</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">15</div>
+      <div class="stat-label">Chapters</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Free</div>
+      <div class="stat-label">Audio Companion</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">597</div>
+      <div class="stat-label">Pages in Print</div>
+    </div>
+  </div>
+
+  <!-- ── BOOKSTORE ── -->
+  <section class="store" id="books">
+    <div class="section-header">
+      <h2 class="section-title">The Catalog</h2>
+      <span class="section-sub">All Titles</span>
+    </div>
+
+    <div class="book-list">
+
+      <!-- ── Book 1 ── -->
+      <div class="book-row">
+        <div class="book-cover">
+          <img src="images/cover-book1.png" alt="Say No Without Guilt — Marcus Webb" />
+        </div>
+
+        <div class="book-info">
+          <div class="book-row-meta">
+            <span class="book-num-tag">Book 01 · 2026</span>
+            <span class="book-status status-live">Available Now</span>
+          </div>
+          <h3 class="book-row-title">Say No Without Guilt</h3>
+          <p class="book-row-subtitle">Making Peace With the Guilt That Follows</p>
+          <p class="book-row-desc">A step-by-step field guide to setting boundaries without the spiral. Real scripts, worksheets, and a free audio companion for when the guilt shows up anyway.</p>
+          <div class="book-row-tags">
+            <span class="tag">Boundaries</span>
+            <span class="tag">Self-Trust</span>
+            <span class="tag">Emotional Clarity</span>
+            <span class="tag">597 pages</span>
+          </div>
+
+          <!-- Synopsis peek -->
+          <div class="synopsis">
+            <button class="synopsis-toggle" onclick="toggleSynopsis(this)">
+              <span class="arrow">›</span> Read an excerpt
+            </button>
+            <div class="synopsis-body">
+              <p>When Maya said no for the first time, she expected relief. She was thirty-four years old and had just told her mother no — a simple, two-letter word that should have felt empowering. The word left her mouth clear and firm. She waited for the relief. It didn't come.</p>
+              <p>Instead, a voice — not her mother's, but her own — whispered: <em>"You're being selfish. You're letting people down."</em> By Sunday morning, Maya had changed her mind. She called back. Apologized. Said yes. The guilt disappeared. But so had her weekend. And so had a piece of herself.</p>
+              <p>This is the guilt paradox. Saying no doesn't make guilt disappear — it creates a different kind. And most of us take the no back, because guilt is the price of boundaries, and most of us can't afford to pay it. At least, not yet.</p>
+              <span class="synopsis-source">— Opening, Introduction</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="book-action">
+          <a class="btn-store btn-store-gold" href="say-no/">Get Companion Bundle</a>
+          <span class="btn-store-label">🔒 Exclusive for readers</span>
+        </div>
+      </div>
+
+      <!-- ── Book 2 — Placeholder ── -->
+      <div class="book-row">
+        <div class="book-cover-placeholder">
+          <div class="book-cover-label">
+            <p class="cl-num">Book 02</p>
+            <p class="cl-title">Coming Soon</p>
+          </div>
+        </div>
+
+        <div class="book-info">
+          <div class="book-row-meta">
+            <span class="book-num-tag">Book 02 · 2026</span>
+            <span class="book-status status-soon">Coming Soon</span>
+          </div>
+          <h3 class="book-row-title" style="color:#9a9188; font-style:italic;">[Title Pending]</h3>
+          <p class="book-row-subtitle">New release dropping this month</p>
+          <p class="book-row-desc">The next Kinetic Mind 101 title. Join the early access list from Book 1 to be notified the moment it drops — with first-reader pricing.</p>
+          <div class="book-row-tags">
+            <span class="tag">Early 2026</span>
+            <span class="tag">Marcus Webb</span>
+          </div>
+        </div>
+
+        <div class="book-action">
+          <a class="btn-store btn-store-muted" href="#">Notify Me</a>
+          <span class="btn-store-label">Link active at launch</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── MANIFESTO ── -->
+  <section class="manifesto">
+    <div class="manifesto-inner">
+      <p class="manifesto-eyebrow">Our Mission</p>
+      <h2>Psychology that <em>moves</em> —<br>not just explains.</h2>
+      <div class="manifesto-rule"></div>
+      <p>Most psychology books tell you what's happening inside you. Kinetic Mind 101 books show you what to do next. Every title is built around one idea: understanding something is the beginning, not the destination.</p>
+    </div>
+  </section>
+
+  <!-- ── AUTHOR ── -->
+  <section class="author" id="about">
+    <div class="author-avatar">
+      <span class="author-avatar-initials">MW</span>
+    </div>
+    <div>
+      <p class="author-label">The Author</p>
+      <h3>Marcus Webb</h3>
+      <p>Marcus Webb writes practical, no-fluff guides for people navigating the emotional work of self-respect. His books blend psychology, real-life scripts, and guided reflection — because understanding something isn't the same as living it.</p>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div>
+      <div class="footer-brand">Kinetic Mind <span>101</span></div>
+      <p class="footer-copy" style="margin-top:6px;">© 2026 · Independent Publishing</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="say-no/">Say No Without Guilt</a></li>
+      <li><a href="book2/">Book Two</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    function toggleSynopsis(btn) {
+      const body = btn.nextElementSibling;
+      const isOpen = body.classList.contains('visible');
+      body.classList.toggle('visible', !isOpen);
+      btn.classList.toggle('open', !isOpen);
+      btn.querySelector('.arrow').textContent = isOpen ? '›' : '›';
+    }
+  </script>
+
+</body>
+</html>
