@@ -463,18 +463,13 @@
       }
 
       try {
-        // Google Apps Script tidak support CORS preflight,
-        // pakai no-cors + form-encoded = berjalan tanpa hambatan
-        const body = new URLSearchParams({ email, name });
+        // GET + URL params — paling reliable untuk GAS no-cors
+        const url = new URL(GAS_URL);
+        url.searchParams.set('email', email);
+        if (name) url.searchParams.set('name', name);
+        await fetch(url.toString(), { mode: 'no-cors' });
 
-        await fetch(GAS_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: body.toString()
-        });
-
-        // no-cors tidak bisa baca response, tapi POST sudah terkirim
+        // no-cors tidak bisa baca response, tapi request sudah terkirim
         showSuccess();
 
       } catch (err) {
