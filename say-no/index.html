@@ -197,21 +197,7 @@
       line-height: 1.6;
     }
 
-    /* MailerLite embed placeholder */
-    .ml-embed-placeholder {
-      background: var(--rosefog);
-      border: 1.5px dashed var(--roseline);
-      border-radius: 10px;
-      padding: 28px 20px;
-      margin-bottom: 16px;
-      font-size: 0.75rem;
-      color: var(--plum);
-      opacity: 0.65;
-      font-style: italic;
-      line-height: 1.7;
-    }
-
-    /* Fallback form (use before MailerLite is set up) */
+    /* Form styles */
     .form-group { margin-bottom: 12px; text-align: left; }
     .form-group label {
       display: block;
@@ -253,6 +239,43 @@
     .btn-submit:hover {
       background: var(--plum-dark);
       transform: translateY(-1px);
+    }
+    .btn-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Success state */
+    .success-state {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+    .success-icon {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+    }
+    .success-state h4 {
+      font-family: 'Lora', serif;
+      font-size: 1.1rem;
+      color: var(--plum);
+      margin-bottom: 8px;
+    }
+    .success-state p {
+      font-size: 0.82rem;
+      color: var(--gray);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Error message */
+    .form-error {
+      display: none;
+      font-size: 0.75rem;
+      color: #c0392b;
+      margin-top: 8px;
+      text-align: left;
     }
 
     .privacy-note {
@@ -354,29 +377,33 @@
       <p>Enter your email and we'll send everything to your inbox — free, instantly.</p>
 
       <!-- ════════════════════════════════════════════
-           REPLACE with MailerLite embed code
-           List: "Say No Without Guilt — Readers"
-           Automation: send bundle files on signup
+           MailerLite Embedded Form
+           Setup: mailerlite.com → Forms → Embedded
+           Group: "Say No Readers"
+           Paste ML embed code BELOW this block if using MailerLite widget.
+           OR: keep the native form below (works with MailerLite Groups API).
            ════════════════════════════════════════════ -->
-      <div class="ml-embed-placeholder">
-        [ Paste your MailerLite embed code here ]<br><br>
-        Go to MailerLite → Forms → Create Embedded Form<br>
-        → List: "Say No Readers" → Copy embed code → paste here
-      </div>
 
-      <!-- Fallback form (comment out when MailerLite is ready)
-      <form action="https://formspree.io/f/YOUR_ID" method="POST">
+      <!-- Native form — works with MailerLite Groups API (free) -->
+      <form id="bundleForm" novalidate>
         <div class="form-group">
           <label for="name">First Name</label>
-          <input type="text" id="name" name="name" placeholder="Your first name" required />
+          <input type="text" id="name" name="name" placeholder="Your first name" autocomplete="given-name" />
         </div>
         <div class="form-group">
-          <label for="email">Email Address</label>
-          <input type="email" id="email" name="email" placeholder="your@email.com" required />
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required autocomplete="email" />
         </div>
-        <button type="submit" class="btn-submit">Send Me the Bundle ✦</button>
+        <p class="form-error" id="formError">Please enter a valid email address.</p>
+        <button type="submit" class="btn-submit" id="submitBtn">Send Me the Bundle ✦</button>
       </form>
-      -->
+
+      <!-- Success message (shown after submit) -->
+      <div class="success-state" id="successState">
+        <div class="success-icon">🎉</div>
+        <h4>Check your inbox!</h4>
+        <p>Your companion bundle is on its way. Check your email — including spam just in case.</p>
+      </div>
 
       <p class="privacy-note">No spam, ever. Unsubscribe anytime.</p>
       <div class="lock-note">
@@ -389,6 +416,81 @@
   <footer>
     <p>© 2026 <a href="/">Kinetic Mind 101</a> · By Marcus Webb · Book 01 Companion</p>
   </footer>
+
+  <script>
+    // ═══════════════════════════════════════════════════════
+    // SETUP: Google Apps Script (gratis, tanpa alamat fisik)
+    //
+    // 1. Buka script.google.com → New project
+    // 2. Paste kode dari file: say-no/gas-backend.gs
+    // 3. Deploy → New deployment → Web app
+    //    - Execute as: Me
+    //    - Who has access: Anyone
+    // 4. Copy "Web app URL" → paste di bawah ini
+    // ═══════════════════════════════════════════════════════
+
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxD3QHg3qNK7dhmG_O7BQ31MVCgYcncIXO9djzox7kxwLeJLnk6AwjE2-rWSDQNHr22_g/exec';
+
+    // ═══════════════════════════════════════════════════════
+
+    const form         = document.getElementById('bundleForm');
+    const submitBtn    = document.getElementById('submitBtn');
+    const successState = document.getElementById('successState');
+    const formError    = document.getElementById('formError');
+
+    const IS_CONFIGURED = GAS_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      formError.style.display = 'none';
+
+      const email = document.getElementById('email').value.trim();
+      const name  = document.getElementById('name').value.trim();
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        formError.style.display = 'block';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+
+      if (!IS_CONFIGURED) {
+        // Dev mode — form belum terhubung, tampilkan success untuk preview
+        console.log('[Dev mode] Form belum terhubung ke GAS. Email:', email);
+        setTimeout(showSuccess, 600);
+        return;
+      }
+
+      try {
+        // Google Apps Script tidak support CORS preflight,
+        // pakai no-cors + form-encoded = berjalan tanpa hambatan
+        const body = new URLSearchParams({ email, name });
+
+        await fetch(GAS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body.toString()
+        });
+
+        // no-cors tidak bisa baca response, tapi POST sudah terkirim
+        showSuccess();
+
+      } catch (err) {
+        console.error(err);
+        formError.textContent = 'Koneksi gagal. Coba lagi, atau hubungi kami langsung.';
+        formError.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Me the Bundle ✦';
+      }
+    });
+
+    function showSuccess() {
+      form.style.display = 'none';
+      successState.style.display = 'block';
+    }
+  </script>
 
 </body>
 </html>
